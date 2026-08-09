@@ -1,0 +1,149 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:layout name="Default" />
+
+This Template is responsible for displaying a single view for a domain object
+
+If you modify this template, do not forget to change the overwrite settings
+in /Configuration/ExtensionBuilder/settings.yaml:
+  Resources:
+    Private:
+      Templates:
+        Show.html: keep	
+
+Otherwise your changes will be overwritten the next time you save the extension in the extension builder
+
+<f:section name="main">
+
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Bestellung bei {client.company}</title>
+  <style type="text/css">
+    body {
+ 		font-family:'Helvetica'
+    }   
+  </style>
+</head>
+
+<f:if condition="{prefs.srvOrder.srvOrderMailCss}">
+<style>{prefs.srvOrder.srvOrderMailCss}</style>
+</f:if>
+
+
+<table>
+<tr>
+<td>
+
+<table class="order-headline">
+	<tr>
+		<td style="font-size:30px;">
+			<b>Bestellbestätigung</b>
+		</td>
+	</tr>
+		<tr>
+		<td style="font-size:20px;">
+			Bestellung Nr. {order.ordernumber} {prefs.srvOrder.srvOrderMailSubject}
+		</td>
+	</tr>
+
+</table>
+
+<table class="order-text" style="margin-top:35px;">
+	<tr>
+		<td>
+			<b>GutenTag</b>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Vielen Dank für Ihre Bestellung. Wir werden diese in Kürze bearbeiten.
+		</td>
+	</tr>
+	<tr>
+		<td>
+			 <f:if condition="{data.arrivalTime}">
+            	<f:if condition="{data.arrivalTime.delivery} == 'pickup'">
+                	<f:then>
+                    	Ihre Bestellung ist vorraussichtlich abholbereit am {data.arrivalTime.date} ab {data.arrivalTime.time} Uhr.
+                    </f:then>
+                	<f:else>
+                    	<f:if condition="{data.arrivalTime.delivery} == 'courier'">
+                    		<f:then>
+                            	Ihre Bestellung wird vorraussichtlich  am {data.arrivalTime.date} bis {data.arrivalTime.time} Uhr geliefert.
+                        	</f:then>
+                    	</f:if>
+                    </f:else>
+                </f:if>
+            </f:if>
+		</td>
+	</tr>
+</table>
+
+<table class="order-client-information" style="margin-top:35px;">
+	<tr>
+		<td>
+			<b>Adresse:</b>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			{client.company}
+		</td>
+	</tr>
+	<tr>
+		<td>
+			{client.name}
+		</td>
+	</tr>
+	<tr>
+		<td>
+			{client.address}
+		</td>
+	</tr>
+	<tr>
+		<td>
+			{client.zip} {client.city}
+		</td>
+	</tr>
+	
+	<f:if condition="{client.tel}">
+		<tr>
+			<td>
+				<br>
+				Fon: {client.tel}
+			</td>
+		</tr>
+	</f:if>
+	
+</table>
+
+<table class="order-qrcode" style="margin-top:35px;">
+	<tr>
+		<td style="text-align:center;">
+        	<div >
+            	<a href="{settings.qrcode.text}&t={order.orderid}"  target="_blank" >
+                	<f:comment>
+                		Der Code wird als Inline-Bild mitgeschickt (Content-ID
+                		"qrcode", gesetzt in phlorderEid::sendMail()), nicht als
+                		URL. Ein per URL geladenes Bild bliebe in den meisten
+                		Mail-Clients hinter der Sperre fuer externe Inhalte.
+                		settings.qrcode.filepath ist gesetzt, wenn es eine Datei
+                		gibt - ohne sie darf hier kein leerer Rahmen stehen.
+                	</f:comment>
+                	<f:if condition="{settings.qrcode.filepath}">
+                		<img src="cid:qrcode" alt="QR-Code zur Bestellung" style="width:100%;height:auto;" />
+                	</f:if>
+                </a>
+            </div>
+        </td>
+	</tr>
+</table>
+	
+	
+</td>
+</tr>
+</table>
+
+
+</f:section>
+</html>

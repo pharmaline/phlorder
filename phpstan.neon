@@ -1,0 +1,13 @@
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    # Level 5 wie in phlvote/phlaponot/phlusereditor; Ziel ist ein schrittweises Anheben.
+    level: 5
+    paths:
+        - Classes
+    # Der Bestandscode stuetzt sich auf (teils luecken-/fehlerhafte) PHPDocs;
+    # PHPDoc-Typen nicht als sicher behandeln (entfernt "alwaysTrue"-Rauschen).
+    treatPhpDocTypesAsCertain: false
+    # phpstan-typo3 (saschaegerer) wird per phpstan/extension-installer
+    # automatisch eingebunden.

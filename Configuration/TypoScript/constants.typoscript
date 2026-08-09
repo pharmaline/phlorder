@@ -1,0 +1,41 @@
+plugin.tx_phlorder_order {
+  view {
+    # cat=plugin.tx_phlorder_order/file; type=string; label=Path to template root (FE)
+    templateRootPath = EXT:phlorder/Resources/Private/Templates/
+    # cat=plugin.tx_phlorder_order/file; type=string; label=Path to template partials (FE)
+    partialRootPath = EXT:phlorder/Resources/Private/Partials/
+    # cat=plugin.tx_phlorder_order/file; type=string; label=Path to template layouts (FE)
+    layoutRootPath = EXT:phlorder/Resources/Private/Layouts/
+  }
+  persistence {
+    # cat=plugin.tx_phlorder_order//a; type=string; label=Default storage PID (Sysordner "phlorder")
+    storagePid = 17
+  }
+  settings {
+    # cat=plugin.tx_phlorder_order/enable; type=boolean; label=Endpunkt _f=smo (freie Mail) aktivieren - siehe Documentation/Genesis.md, Phase 7
+    enableFreeMailEndpoint = 0
+
+    # ------------------------------------------------------------------
+    # Secrets: bewusst LEER im Repository. Echte Werte gehoeren in die
+    # Site-/Server-Konfiguration, nicht in den Versionsstand.
+    # Die frueher hier hart hinterlegten Werte (tokenSalt, ordersalt, ut, ot,
+    # oto) gelten als kompromittiert und muessen rotiert werden.
+    # ------------------------------------------------------------------
+    # cat=plugin.tx_phlorder_order/secret; type=string; label=Salt fuer den pageInfo-Hash (csh)
+    ordersalt =
+    # cat=plugin.tx_phlorder_order/secret; type=string; label=Secret fuer den Endpunkt _f=smo
+    freeMailSecret =
+
+    # qrcodeText ist hier entfallen: Der Wert ist instanzabhaengig (er enthaelt
+    # eine Seiten-ID) und steht deshalb als Site-Setting "phlorder.qrcodeText" in
+    # config/sites/<site>/settings.yaml. Definiert in
+    # Configuration/Sets/Phlorder/settings.definitions.yaml, eingesetzt direkt im
+    # Setup (settings.qrcode.text).
+    #
+    # Ein Umweg ueber eine Konstante geht NICHT: {$...}-Platzhalter werden nur im
+    # Setup ersetzt, nicht innerhalb der Konstanten selbst - "qrcodeText =
+    # {$phlorder.qrcodeText}" landete unaufgeloest als Zeichenkette im QR-Code.
+    # cat=plugin.tx_phlorder_order/file; type=string; label=Pfad zum 1x1-Zaehlpixel (_f=lii) - EXT: erlaubt
+    pathToBlindImg = EXT:phlorder/Resources/Public/Images/ie-spacer.gif
+  }
+}

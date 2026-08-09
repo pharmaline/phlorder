@@ -1,0 +1,14 @@
+categories:
+  phlorder:
+    label: 'PHL Bestellung'
+
+settings:
+  phlorder.qrcodeText:
+    label: 'Basis-URL der Statusseite fuer den QR-Code in der Bestellmail'
+    description: >-
+      Der Worker haengt "&t=<orderid>" an. Die URL muss deshalb bereits einen
+      Query-String enthalten, z. B. https://www.example.org/index.php?id=20.
+      Leer = es wird kein QR-Code erzeugt, die Mail geht ohne ihn raus.
+    category: phlorder
+    type: string
+    default: ''

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+    Unit-Test-Suite fuer phlorder.
+    Monorepo-Hinweis: composer vendor/ liegt im Repo-Root, daher zeigt der
+    Bootstrap-Pfad vier Ebenen nach oben.
+-->
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.2/phpunit.xsd"
+    bootstrap="../../../../vendor/typo3/testing-framework/Resources/Core/Build/UnitTestsBootstrap.php"
+    cacheDirectory=".phpunit.cache"
+    cacheResult="false"
+    colors="true"
+    backupGlobals="true"
+    failOnWarning="true"
+    failOnDeprecation="true"
+    failOnNotice="true"
+    failOnRisky="true"
+    requireCoverageMetadata="false"
+>
+    <testsuites>
+        <testsuite name="phlorder unit tests">
+            <directory>../../Tests/Unit/</directory>
+        </testsuite>
+    </testsuites>
+    <source>
+        <include>
+            <directory>../../Classes/</directory>
+        </include>
+    </source>
+    <php>
+        <ini name="display_errors" value="1"/>
+        <env name="TYPO3_CONTEXT" value="Testing"/>
+    </php>
+</phpunit>

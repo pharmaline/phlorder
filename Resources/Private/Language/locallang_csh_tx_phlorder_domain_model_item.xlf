@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2018-10-03T14:12:36Z" product-name="phlorder">
+		<header/>
+		<body>
+			<trans-unit id="tx_phlorder_domain_model_order">
+				<source>Bestellung</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.description">
+				<source></source>
+			</trans-unit>
+			<trans-unit id="pzn.description">
+				<source>pzn</source>
+			</trans-unit>
+			<trans-unit id="name.description">
+				<source>name</source>
+			</trans-unit>
+			<trans-unit id="size.description">
+				<source>size</source>
+			</trans-unit>
+			<trans-unit id="dar.description">
+				<source>dar</source>
+			</trans-unit>
+			<trans-unit id="qty.description">
+				<source>qty</source>
+			</trans-unit>
+			<trans-unit id="price.description">
+				<source>price</source>
+			</trans-unit>
+			<trans-unit id="diff.description">
+				<source>diff</source>
+			</trans-unit>
+			<trans-unit id="imgfid.description">
+				<source>imgfid</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

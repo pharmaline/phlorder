@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2018-10-03T14:12:36Z" product-name="phlorder">
+		<header/>
+		<body>
+			<trans-unit id="tx_phlorder_domain_model_order">
+				<source>Bestellung</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.description">
+				<source></source>
+			</trans-unit>
+			<trans-unit id="phluserfid.description">
+				<source>phluserfid</source>
+			</trans-unit>
+			<trans-unit id="feusefrid.description">
+				<source>feusefrid</source>
+			</trans-unit>
+			<trans-unit id="orderid.description">
+				<source>orderid</source>
+			</trans-unit>
+			<trans-unit id="status.description">
+				<source>status</source>
+			</trans-unit>
+			<trans-unit id="last_name.description">
+				<source>lastName</source>
+			</trans-unit>
+			<trans-unit id="first_name.description">
+				<source>firstName</source>
+			</trans-unit>
+			<trans-unit id="address.description">
+				<source>address</source>
+			</trans-unit>
+			<trans-unit id="zip.description">
+				<source>zip</source>
+			</trans-unit>
+			<trans-unit id="city.description">
+				<source>city</source>
+			</trans-unit>
+			<trans-unit id="phone.description">
+				<source>phone</source>
+			</trans-unit>
+			<trans-unit id="email.description">
+				<source>email</source>
+			</trans-unit>
+			<trans-unit id="mobil.description">
+				<source>mobil</source>
+			</trans-unit>
+			<trans-unit id="delivery.description">
+				<source>delivery</source>
+			</trans-unit>
+			<trans-unit id="payment.description">
+				<source>payment</source>
+			</trans-unit>
+			<trans-unit id="i_b_a_n.description">
+				<source>iBAN</source>
+			</trans-unit>
+			<trans-unit id="order_image.description">
+				<source>orderImage</source>
+			</trans-unit>
+			<trans-unit id="note.description">
+				<source>note</source>
+			</trans-unit>
+			<trans-unit id="tolog.description">
+				<source>tolog</source>
+			</trans-unit>
+			<trans-unit id="toitem.description">
+				<source>toitem</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

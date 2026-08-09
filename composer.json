@@ -1,0 +1,60 @@
+{
+    "name": "pharmaline/phlorder",
+    "type": "typo3-cms-extension",
+    "description": "Bestellstrecke des Pharmacy-Portals: Bestellungen erfassen, Bestellnummer vergeben, Bestellmails an Apotheke und Kundin versenden, Status im Frontend anzeigen",
+    "authors": [
+        {
+            "name": "Christian Platt",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "typo3/cms-core": "^13.4",
+        "typo3/cms-extbase": "^13.4",
+        "typo3/cms-fluid": "^13.4",
+        "typo3/cms-frontend": "^13.4",
+        "typo3/cms-backend": "^13.4",
+        "pharmaline/phlusereditor": "@dev",
+        "pharmaline/phlqr": "@dev"
+    },
+    "require-dev": {
+        "typo3/testing-framework": "^9.0",
+        "phpstan/phpstan": "^2.0",
+        "phpstan/extension-installer": "^1.4",
+        "saschaegerer/phpstan-typo3": "^2.1",
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "typo3/coding-standards": "^0.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Pharmaline\\Phlorder\\": "Classes/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Pharmaline\\Phlorder\\Tests\\": "Tests/"
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "phlorder"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "typo3/cms-composer-installers": true,
+            "typo3/class-alias-loader": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "scripts": {
+        "ci:phpstan": "phpstan analyse -c phpstan.neon --no-progress --memory-limit=1G",
+        "ci:cs": "php-cs-fixer fix --dry-run --diff",
+        "ci:cs:fix": "php-cs-fixer fix",
+        "ci:test:unit": "phpunit -c Build/phpunit/UnitTests.xml"
+    },
+    "replace": {
+        "typo3-ter/phlorder": "self.version"
+    }
+}

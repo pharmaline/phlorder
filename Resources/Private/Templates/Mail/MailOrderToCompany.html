@@ -1,0 +1,224 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:layout name="Default" />
+
+This Template is responsible for displaying a single view for a domain object
+
+If you modify this template, do not forget to change the overwrite settings
+in /Configuration/ExtensionBuilder/settings.yaml:
+  Resources:
+    Private:
+      Templates:
+        Show.html: keep	
+
+Otherwise your changes will be overwritten the next time you save the extension in the extension builder
+
+<f:section name="main">
+
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Bestellung bei {client.company}</title>
+  <style type="text/css">
+    body {
+ 		font-family:'Helvetica'
+    }   
+  </style>
+</head>
+
+<f:if condition="{prefs.srvOrder.srvOrderMailCss}">
+<style>{prefs.srvOrder.srvOrderMailCss}</style>
+</f:if>
+
+
+
+<table class="orderdate-tabel-wrap" style="margin-top:35px; ">
+	<tr>
+		<td>
+			<f:if condition="{pref.srvOrder.srvOrderMailSubject}">
+				<f:then>
+   		 			{pref.srvOrder.srvOrderMailSubject}
+  				</f:then>
+  				<f:else>
+  					Online-Bestellung
+  				</f:else>
+			</f:if>
+				
+			<f:switch expression="{order.salutation}">
+  			<f:case value="male"> von Herr {order.firstName} {order.lastName}</f:case>
+  			<f:case value="maleDr"> von Herr Dr. {order.firstName} {order.lastName}</f:case>
+  			<f:case value="female"> von Frau {order.firstName} {order.lastName}</f:case>
+  			<f:case value="femaleDr"> von Frau Dr. {order.firstName} {order.lastName}</f:case>
+ 			<f:defaultCase> von {order.firstName} {order.lastName}</f:defaultCase>
+			</f:switch>	
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Bestellung Nr. {order.ordernumber}
+		</td>
+	</tr>
+	<tr>
+		<!-- 
+<td>
+			Datum: 
+			<f:format.date format="d.m.Y H:s">{order.timestamp}</f:format.date>
+		</td>
+ -->
+		<td>
+ 			Datum: {data.ordertime}
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<f:if condition="{data.arrivalTime}">
+  				<f:then>
+   		 			<f:if condition="{data.arrivalTime.delivery} == 'pickup'">
+  						<f:then>
+   		 					Abholung ab {data.arrivalTime.date} {data.arrivalTime.time}
+  						</f:then>
+  						<f:else>
+  							Zustellung am {data.arrivalTime.date} um ca. {data.arrivalTime.time} Uhr
+  						</f:else>
+					</f:if>
+  				</f:then>
+			</f:if>
+		</td>
+	</tr>
+
+</table>
+
+<table class="orderimage-table-wrap" style="margin-top:35px; ">
+	<f:if condition="{order.orderImage}">
+  		<f:then>
+			<tr>
+				<td>
+					<b>Bild/er</b>
+					<f:for each="{order.orderImage}" as="image">
+						<tr>
+							<td>
+								<f:image image="{image}" maxWidth="800" style="width:600px; height=auto;"/>
+							</td>
+						</tr>
+					</f:for>
+				</td>
+			</tr>
+  		</f:then>
+  		<f:else>
+			<tr>
+				<td>
+					<b>Keine Bilder vorhanden<b>
+				</td>
+			</tr>
+  		</f:else>
+	</f:if>
+
+</tabel>
+
+<table class="orderdetail-table-wrap" style="margin-top:35px; ">
+	<tr>
+		<td>
+			<b>Weitere Bestelldetails:</b>
+	
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<f:if condition="{order.note}">
+  				<f:then>
+   		 			{order.note}
+  				</f:then>
+  				<f:else>
+					Keine	
+  				</f:else>
+			</f:if>
+		</td>
+	</tr>
+</tabel>
+
+<table class="ordercustomer-table-wrap" style="margin-top:35px; ">
+	<tr>
+		<td>
+			<b>Kundendaten</b>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			{order.firstName} {order.lastName}
+		</td>
+	</tr>
+	
+	<tr>
+		<td>
+			{order.zip} {order.city}
+		</td>
+	</tr>
+	<tr>
+		<td>
+			{order.address}
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<br>
+			<b>E-Mail:</b> {order.email}
+		</td>
+	</tr>
+	
+	<f:if condition="{order.phone}">
+ 	<tr>
+		<td>
+			<b>Tel:</b> {order.phone}
+		</td>
+	</tr>
+	</f:if>
+
+	
+</tabel>
+
+<table class="orderdelivery-table-wrap" style="margin-top:35px; ">
+	<tr>
+		<td>
+			<b>Gewünschte Zustellung</b>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<f:switch expression="{order.delivery}">
+  			<f:case value="shipping">Versand</f:case>
+  			<f:case value="pickup">Abholung</f:case>
+  			<f:case value="courier">Botenlieferung</f:case>
+ 			<f:defaultCase>{order.delivery}</f:defaultCase>
+			</f:switch>	
+		</td>
+	</tr>
+</tabel>
+
+<table class="orderpayment-table-wrap" style="margin-top:35px; ">
+	<tr>
+		<td>
+			<b>Gewünschte Bezahlart</b>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<f:switch expression="{order.payment}">
+  			<f:case value="cash">Barzahlung</f:case>
+  			<f:case value="debit">Lastschrift</f:case>
+  			<f:case value="invoice">Rechnung</f:case>
+  			<f:case value="prepaid">Vorkasse</f:case>
+ 			<f:defaultCase>{order.payment}</f:defaultCase>
+			</f:switch>	
+		</td>
+	</tr>
+</tabel>
+
+<table class="orderfooter-table-wrap" style="margin-top:35px; ">
+	<tr>
+		<td>
+			Diese Mail wurde von Ihrem OpenPharmacy Shop "{client.company}" erzeugt
+		</td>
+	</tr>
+</table>
+
+</f:section>
+</html>

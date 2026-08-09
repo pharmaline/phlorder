@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2018-10-03T14:12:36Z" product-name="phlorder">
+		<header/>
+		<body>
+			<trans-unit id="tx_phlorder_domain_model_order.description">
+				<source></source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order">
+				<source>Order</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.phluserfid">
+				<source>Phluserfid</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.feusefrid">
+				<source>Feusefrid</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.orderid">
+				<source>Orderid</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.status">
+				<source>Status</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.last_name">
+				<source>Last Name</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.first_name">
+				<source>First Name</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.address">
+				<source>Address</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.zip">
+				<source>Zip</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.city">
+				<source>City</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.phone">
+				<source>Phone</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.email">
+				<source>Email</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.mobil">
+				<source>Mobil</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.delivery">
+				<source>Delivery</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.payment">
+				<source>Payment</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.i_b_a_n">
+				<source>I B A N</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.order_image">
+				<source>Order Image</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.note">
+				<source>Note</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.tolog">
+				<source>Tolog</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_order.toitem">
+				<source>Toitem</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_log">
+				<source>Log</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_log.timestamp">
+				<source>Timestamp</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_log.action">
+				<source>Action</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_log.result">
+				<source>Result</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_log.value1">
+				<source>Value1</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_log.value2">
+				<source>Value2</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_log.free">
+				<source>Free</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_log.actor">
+				<source>Actor</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_item">
+				<source>Item</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_item.pzn">
+				<source>Pzn</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_item.name">
+				<source>Name</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_item.size">
+				<source>Size</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_item.dar">
+				<source>Dar</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_item.qty">
+				<source>Qty</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_item.price">
+				<source>Price</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_item.diff">
+				<source>Diff</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_item.imgfid">
+				<source>Imgfid</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_token">
+				<source>Token</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_token.phluserfid">
+				<source>Phluserfid</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_token.token">
+				<source>Token</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_token.timestamp">
+				<source>Timestamp</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_token.status">
+				<source>Status</source>
+			</trans-unit>
+			<trans-unit id="tx_phlorder_domain_model_token.free">
+				<source>Free</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

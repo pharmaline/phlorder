@@ -1,0 +1,82 @@
+svg {
+                width: 32px;
+                height: 32px;
+                margin: 10px;
+            }
+
+.tx_phlusereditor{}
+.phluseeditor{}
+.phlusearchwrapper{
+	background-color:#ccc;
+}
+.nolirepadding{
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+#tellme{float:left;}
+
+.regajax-loader {
+    //cursor: wait;
+    /* Zeigte frueher auf /typo3conf/ext/phlnewsletter/... - diese Extension gibt es
+       im Monorepo nicht, der Loader blieb also unsichtbar. Dasselbe Bild liegt in
+       phlorder selbst; relativer Pfad, damit es unter /_assets/<hash>/ aufgeht. */
+    background:#ffffff url('../Images/ajax-loader-2.gif') no-repeat center center;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=75)";
+    filter: alpha(opacity=75);
+    opacity: 0.75;
+    position: absolute;
+    z-index: 10000;
+    display: none;
+    left: 0px;
+    top:0px;
+    width: 100%;
+    height: 800px;
+}
+
+.odd{background-color: #ddd;}
+.even{background-color: #eee;}
+.sec1{margin-bottom: 8px; background-color: #eee;}
+.sec2{margin-bottom: 8px;}
+
+	.logo{background-color: blue;}
+	
+	a[href^="tel"]:link,
+  	a[href^="tel"]:visited,
+  	a[href^="tel"]:hover {
+      text-decoration:    underline;
+      color: blue;
+   	}
+
+
+
+/** responsive */
+
+@media only screen and (min-width: 997px) and (max-width: 1128px) {
+	.sec3{background-color: yellow;}
+}
+
+@media only screen and (min-width: 768px) and (max-width: 996px) {
+	.sec3{background-color: pink;}
+}
+
+
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+	.sec3{background-color: orange;}
+}
+
+
+@media only screen and (max-width: 479px) {
+	.sec3{background-color: blue;}
+	
+}
+
+
+
+/*BS 3/4
+col- 	Extra small (<576px)	
+col-sm 	Small (>=576px)	
+mol-md 	Medium (>=768px)	
+col-lg 	Large (>=992px)	
+col-xl 	Extra Large (>=1200px)
+*/

@@ -1,0 +1,21 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Pharmaline\Phlorder\:
+    resource: '../Classes/*'
+    exclude:
+      - '../Classes/Domain/Model/*'
+      # Der Ausschluss von '../Classes/Utility/Ajax/*' ist seit Phase 7 nicht mehr
+      # noetig: phlorderEid.php enthaelt keinen Code auf Dateiebene mehr, sondern
+      # nur noch die per DI erzeugte Klasse.
+
+  # PSR-15-Middlewares: als oeffentliche Services registrieren, damit sie ueber die
+  # Identifier aus Configuration/RequestMiddlewares.php aufloesbar sind.
+  Pharmaline\Phlorder\Middleware\PhlorderEidMiddleware:
+    public: true
+
+  Pharmaline\Phlorder\Middleware\PhlorderEidCacheDisabler:
+    public: true

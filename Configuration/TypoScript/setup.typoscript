@@ -1,0 +1,125 @@
+plugin.tx_phlorder_order {
+  view {
+    templateRootPaths.0 = EXT:phlorder/Resources/Private/Templates/
+    templateRootPaths.1 = {$plugin.tx_phlorder_order.view.templateRootPath}
+    partialRootPaths.0 = EXT:phlorder/Resources/Private/Partials/
+    partialRootPaths.1 = {$plugin.tx_phlorder_order.view.partialRootPath}
+    layoutRootPaths.0 = EXT:phlorder/Resources/Private/Layouts/
+    layoutRootPaths.1 = {$plugin.tx_phlorder_order.view.layoutRootPath}
+  }
+
+  persistence {
+    storagePid = {$plugin.tx_phlorder_order.persistence.storagePid}
+  }
+
+  settings {
+    # Fallback: aktuelle Seite als storagePid, wenn oben nichts gesetzt ist
+    setCurrentPageAsStoragePid = 0
+
+    # --- Sicherheit (siehe Documentation/Genesis.md, Phase 7) ------------
+    enableFreeMailEndpoint = {$plugin.tx_phlorder_order.settings.enableFreeMailEndpoint}
+    freeMailSecret = {$plugin.tx_phlorder_order.settings.freeMailSecret}
+    ordersalt = {$plugin.tx_phlorder_order.settings.ordersalt}
+
+    # --- Assets ---------------------------------------------------------
+    # jQuery wird global vom Sitepackage geladen -> hier aus.
+    initJQuery = 0
+    jQueryToFooter = 1
+    jQueryFilesToFooter = 1
+    pathToJquery = EXT:phlorder/Resources/Public/Js/jquery-2.2.0.min.js
+    pathToJs = EXT:phlorder/Resources/Public/Js/
+
+    # frueher: bootstrap3.css - diese Datei existiert nicht, die vorhandene
+    # heisst bootstrap.min.css
+    cssFile {
+      0 = EXT:phlorder/Resources/Public/Css/bootstrap.min.css
+      1 = EXT:phlorder/Resources/Public/Css/jquery.gritter.css
+      2 = EXT:phlorder/Resources/Public/Css/phlorder.css
+    }
+
+    jscript {
+      1 = jquery.gritter.min.js
+      2 = jquery.base64.min.js
+      3 = bootstrap.min.js
+      4 = phlorder.js
+    }
+
+    # --- Fachliches -----------------------------------------------------
+    salutation {
+      Herr = salutation.mr
+      Frau = salutation.mrs
+      Divers = salutation.div
+    }
+
+    order.status {
+      new = order.new
+      pending = order.pending
+      delivery = order.delivery
+      ready = order.ready
+      canceled = order.canceled
+      closed = order.closed
+    }
+
+    # 1x1-Zaehlpixel fuer _f=lii. Zeigte frueher auf die fremde, im Monorepo nicht
+    # vorhandene Extension phlnewsletter (/typo3conf/ext/phlnewsletter/...).
+    # EXT:-Pfade loest der Worker in eine oeffentliche URL auf (in v13 liegen die
+    # publizierten Assets unter /_assets/<hash>/, ein fester Pfad waere falsch).
+    pathToBlindImg = {$plugin.tx_phlorder_order.settings.pathToBlindImg}
+
+    qrcode {
+      # Basis-URL der Statusseite. Der Worker haengt "&t=<orderid>" an, die URL
+      # muss also bereits einen Query-String enthalten. Site-Setting, weil der
+      # Wert eine Seiten-ID enthaelt und damit instanzabhaengig ist.
+      # Leer = es wird kein Code erzeugt, die Mail geht ohne ihn raus.
+      text = {$phlorder.qrcodeText}
+
+      # Kantenlaenge in Pixeln. Seit Phase 8 der einzige Darstellungswert, den
+      # der QrCodeService von hier uebernimmt; magnification, quality und
+      # blackwhite hatten schon in der Altfassung keine Wirkung und sind
+      # entfallen (Fehlerkorrektur und Ruhezone: QrCodeService::DEFAULTS).
+      width = 300
+
+      # Der Dateiname kommt aus der Bestellnummer, ist also nicht eindeutig genug
+      # fuer den Hash-Cache des Service -> immer neu schreiben.
+      imageoverride = 1
+    }
+  }
+}
+
+# Plugin "Orderstatus" erbt die komplette Konfiguration des Cockpit-Plugins.
+plugin.tx_phlorder_orderstatus < plugin.tx_phlorder_order
+
+# Unveraendert aus der Altfassung uebernommen: _CSS_DEFAULT_STYLE existiert in
+# v13 weiterhin (ausgewertet von cms-frontend/Http/RequestHandler.php).
+plugin.tx_phlorder._CSS_DEFAULT_STYLE (
+    textarea.f3-form-error {
+        background-color:#FF9F9F;
+        border: 1px #FF0000 solid;
+    }
+
+    input.f3-form-error {
+        background-color:#FF9F9F;
+        border: 1px #FF0000 solid;
+    }
+
+    .tx-phlorder table {
+        border-collapse:separate;
+        border-spacing:10px;
+    }
+
+    .tx-phlorder table th {
+        font-weight:bold;
+    }
+
+    .tx-phlorder table td {
+        vertical-align:top;
+    }
+
+    .typo3-messages .message-error {
+        color:red;
+    }
+
+    .typo3-messages .message-ok {
+        color:green;
+    }
+)

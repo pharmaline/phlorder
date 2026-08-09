@@ -1,0 +1,154 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<f:if condition='{data.modus}==\'info\''>
+<div class="col-12 col-md-12 nolirepadding">
+	<div class="col-md-3 col-xs-12 nolirepadding"><f:translate key="tx_phlorder_domain_model_order.timestamp" /></div>
+	<div class="col-md-9 col-xs-12 nolirepadding"><f:format.date date="{order.timestamp}" format="d.m.Y H:i" />Uhr</div>
+	
+	<div class="col-md-3 col-xs-12 nolirepadding"><f:translate key="order.ordernumber" /></div>
+	<div class="col-md-9 col-xs-12 nolirepadding">{order.ordernumber}</div>
+	
+	<div class="col-md-3 col-xs-12 nolirepadding"><f:translate key="order.orderid" /></div>
+	<div class="col-md-9 col-xs-12 nolirepadding">{order.orderid}</div>
+	
+	<div class="col-md-3 col-xs-12 nolirepadding"><f:translate key="order.status" /></div>
+	<div class="col-md-9 col-xs-12 nolirepadding">
+	<f:if condition="{order.status}">
+		<f:then><f:translate key="order.status.{order.status}" /> </f:then>
+		<f:else><f:translate key="order.status.bestelleingang" /></f:else>
+		</f:if>
+	</div>
+
+</div>
+</f:if>
+
+
+
+
+<f:if condition='{data.modus}==\'admin\''>
+<ul class="nav nav-tabs">
+  <li class="active"><a data-toggle="tab" href="#home"><f:translate key="tab.home" /></a></li>
+  <li><a data-toggle="tab" href="#menu1"><f:translate key="tab.log" /></a></li>
+    <li><a data-toggle="tab" href="#mail"><f:translate key="tab.Mail" /></a></li>
+</ul>
+
+<div class="tab-content">
+	<div id="home" class="tab-pane fade in active">
+
+	<div class="col-12 col-md-12 nolirepadding">
+	  <div class="col-md-6 col-6 nolirepadding sec1">
+		<div class="col-md-3 col-xs-4"><f:translate key="tx_phlorder_domain_model_order.timestamp" /></div>
+		<div class="col-md-9"><f:format.date date="{order.timestamp}" format="d.m.Y H:i" /></div>
+	
+		<div class="col-md-3 col-xs-4"><f:translate key="order.status" /></div>
+		<div class="col-md-9 "><f:form.select name="status" options="{selector.status}" optionValueField="key" optionLabelField="value" value="{order.status}" /></div>
+
+		<div class="col-md-3 col-xs-4"><f:translate key="order.delivery" /></div>
+		<div class="col-md-9">{order.delivery}</div>
+
+	  </div>
+	
+	  <div class="col-md-6 col-6 nolirepadding sec1">
+		<div class="col-md-3 col-sm-3 col-xs-12"><f:translate key="order.ordernumber" /></div>
+		<div class="col-md-9">{order.ordernumber}</div>
+	
+		<div class="col-md-3 col-sm-3 col-xs-12"><f:translate key="order.orderid" /></div>
+		<div class="col-md-9">{order.orderid}</div>
+		
+		<div class="col-md-3 col-xs-4"><f:translate key="order.payment" /></div>
+		<div class="col-md-9">{order.payment}</div>
+		
+
+		
+	 </div>
+	</div>
+	
+	<div class="col-12 col-md-12 nolirepadding">
+	  <div class="col-md-6 col-6 nolirepadding sec2">
+		<f:if condition="{order.company}">
+		<div class="col-md-3 col-xs-4"><f:translate key="order.company" /></div>
+		<div class="col-md-9">{order.company}</div>
+	</f:if>
+	
+		<div class="col-md-3 col-xs-4"><f:translate key="order.salutation" /></div>
+		<div class="col-md-9"><f:form.select name="status" options="{selector.salutation}" optionValueField="key" optionLabelField="value" value="{order.salutation}" /></div>
+	
+		<div class="col-md-3 col-xs-4"><f:translate key="order.first_name" /></div>
+		<div class="col-md-9">{order.firstName}</div>
+	
+		<div class="col-md-3 col-xs-4"><f:translate key="order.last_name" /></div>
+		<div class="col-md-9">{order.lastName}</div>
+	
+		<div class="col-md-3 col-xs-4"><f:translate key="order.address" /></div>
+		<div class="col-md-9">{order.address}</div>
+
+		<div class="col-md-3 col-xs-4"><f:translate key="order.zipcity" /></div>
+		<div class="col-md-9">{order.zip} {order.city}</div>
+	  </div>
+	
+	  <div class="col-md-6 col-6 nolirepadding sec3">
+		<div class="col-md-3 col-xs-4"><f:translate key="order.phone" /></div>
+		<div class="col-md-9">{order.phone}</div>
+	
+		<div class="col-md-3 col-xs-4"><f:translate key="order.mobil" /></div>
+		<div class="col-md-9"><a class="tel" href="tel:{order.mobil}">{order.mobil}</a></div>
+	
+		<div class="col-md-3 col-xs-4"><f:translate key="order.email" /></div>
+		<div class="col-md-9"><a class="mailto" href='mailto:{order.email}'>{order.email}</a></div>
+	  
+	  	<div class="col-md-3 col-xs-4"><f:translate key="order.note" /></div>
+		<div class="col-md-9 well"><f:format.html>{order.note}</f:format.html></div>
+	  
+	  </div>
+	</div>
+	<f:for each="{order.orderImage}" as="image">
+		<div class="col-md-3 col-xs-4"><f:translate key="order.image" /></div>
+		<div class="col-md-9"><f:image image="{image}" maxWidth="800" /></div>
+	</f:for>
+
+  </div>
+  
+	<div id="menu1" class="tab-pane fade">
+    <h3><f:translate key="tab.log" /></h3>
+    
+    <div class="col-md-3 hidden-sm hidden-xs">Datum</div>
+    <div class="col-md-3 hidden-sm hidden-xs">Aktion</div>
+    <div class="col-md-3 hidden-sm hidden-xs">Eigenschaft</div>
+    <div class="col-md-3 hidden-sm hidden-xs">Wert</div>
+    
+    <f:for each="{order.tolog}" as="log" iteration="iterator">
+    	<div class="onelog col-md-12 nolirepadding {f:if(condition: iterator.isOdd, then: 'odd',else: 'even')}">
+			<div class="col-xs-6 visible-xs visible-sm">Datum</div>
+    	 	<div class="col-md-3"><f:format.date date="{log.timestamp}" format="d.m.Y H:i" /></div>
+    	 	<div class="col-xs-6 visible-xs visible-sm">Aktion</div>
+    	 	<div class="col-md-3"><f:translate key="log.action.{log.action}" /></div>
+    		<div class="col-xs-6 visible-xs visible-sm">Eigenschaft</div>
+    		<div class="col-md-3"><f:translate key="log.action.value.{log.value1}" /> </div>
+    		<div class="col-xs-6 visible-xs visible-sm">Wert</div>
+    		<div class="col-md-3"><f:translate key="log.action.value.{log.value2}" /></div>
+			<div class="col-xs-6 visible-xs visible-sm">Bearbeiter</div>
+    	 	<div class="col-md-3 ">{log.actor}</div>
+    	 	<div class="col-xs-6 visible-xs visible-sm">Anmerkung</div>
+    	 	<div class="col-md-3">{log.free} {log.result}</div>
+		</div>
+		<hr/>
+	</f:for>
+  </div>
+
+	<div id="mail" class="tab-pane fade">
+    	<h3><f:translate key="tab.mail" /></h3>
+		<div class="well"> hier kommt die Mailkommunikation zu dem Vorgang hin</div>
+	</div>
+
+</div>
+
+
+<div id="menu1" class="tab-pane fade">
+    <h3><f:translate key="tab.mail" /></h3>
+</div>
+
+</f:if>
+
+
+
+</html>
