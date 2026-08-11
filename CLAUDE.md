@@ -201,8 +201,15 @@ Nummerierung ist die Referenz für die Einträge in `Documentation/Genesis.md`.
 >
 > **Plugins (seit Phase 6): zwei eigene CTypes**, nicht mehr `list_type` —
 > `Order` (`phlorder_order`, Default `Order->list`) und `Orderstatus`
-> (`phlorder_orderstatus`, Default `Order->status`). **Keine FlexForm mehr**
-> (die alte enthielt nur SCA). Beide Plugins registrieren **nur `list` und `status`**:
+> (`phlorder_orderstatus`, Default `Order->status`). Die alte FlexForm enthielt nur
+> SCA und wurde gelöscht; die neue `flexform_order.xml` hängt **nur am Cockpit-Plugin**
+> und legt mit `settings.sourcePid` die Quelle der Bestellungen fest. Ausgewertet wird
+> das **nicht** im Controller, sondern im EventListener `ApplySourcePidToStoragePid`
+> (`BeforeFlexFormConfigurationOverrideEvent`) — was `initStoragePid()` über
+> `setConfiguration()` setzt, überschreibt der `FrontendConfigurationManager`
+> anschließend wieder mit dem Plugin-TypoScript. Leeres Feld = TypoScript-Default.
+> Begründung und FE-Messwerte in `Documentation/Genesis.md`, Eintrag 2026-08-09.
+> Beide Plugins registrieren **nur `list` und `status`**:
 > ohne SCA ist jede registrierte Action per URL dispatchbar, und die alte
 > Registrierung hätte u. a. drei ungeschützte `delete`-Actions freigelegt.
 > Folge: `LogController`, `ItemController`, `TokenController` sowie
