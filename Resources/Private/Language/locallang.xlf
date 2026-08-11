@@ -135,6 +135,60 @@
 			<trans-unit id="tx_phlorder_domain_model_token.free">
 				<source>Free</source>
 			</trans-unit>
+			<trans-unit id="flexform.sheet_source">
+				<source>Source</source>
+			</trans-unit>
+			<trans-unit id="flexform.source.sourcePid">
+				<source>Source of the orders</source>
+			</trans-unit>
+			<trans-unit id="flexform.source.sourcePid.description">
+				<source>Folder holding the order records. Empty = the storage PID from TypoScript (plugin.tx_phlorder_order.persistence.storagePid) is used.</source>
+			</trans-unit>
+			<trans-unit id="flexform.sheet_list">
+				<source>List</source>
+			</trans-unit>
+			<trans-unit id="flexform.list.sortField">
+				<source>Sort by</source>
+			</trans-unit>
+			<trans-unit id="flexform.list.sortDirection">
+				<source>Sort direction</source>
+			</trans-unit>
+			<trans-unit id="flexform.list.sortDirection.desc">
+				<source>Descending (newest first)</source>
+			</trans-unit>
+			<trans-unit id="flexform.list.sortDirection.asc">
+				<source>Ascending (oldest first)</source>
+			</trans-unit>
+			<trans-unit id="flexform.list.listLimit">
+				<source>Maximum number of orders</source>
+			</trans-unit>
+			<trans-unit id="flexform.list.listLimit.description">
+				<source>0 = no limit. Be careful: a pharmacy can have several hundred orders, all of which are then rendered on one page.</source>
+			</trans-unit>
+			<trans-unit id="flexform.list.field.timestamp">
+				<source>Date</source>
+			</trans-unit>
+			<trans-unit id="flexform.list.field.ordernumber">
+				<source>Pickup number</source>
+			</trans-unit>
+			<trans-unit id="flexform.list.field.status">
+				<source>Status</source>
+			</trans-unit>
+			<trans-unit id="flexform.list.field.lastName">
+				<source>Last name</source>
+			</trans-unit>
+			<trans-unit id="list.empty">
+				<source>No orders found.</source>
+			</trans-unit>
+			<trans-unit id="list.login">
+				<source>Please log in to see the orders of your pharmacy.</source>
+			</trans-unit>
+			<trans-unit id="list.headline">
+				<source>Orders of your pharmacy</source>
+			</trans-unit>
+			<trans-unit id="list.name">
+				<source>Name</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

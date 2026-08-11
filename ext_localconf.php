@@ -22,8 +22,18 @@ defined('TYPO3') or die();
         \Pharmaline\Phlorder\Controller\OrderController::class => 'list, status',
     ],
     // non-cacheable actions
+    //
+    // "list" MUSS hier stehen: die Action haengt an zwei Dingen, die nicht Teil des
+    // Seiten-Cache-Schluessels sind - dem Order-Token ?t=<orderid> (steht in
+    // FE.cacheHash.excludedParameters, siehe unten, geht also NICHT in den
+    // Cache-Identifier ein) und dem angemeldeten FE-User (getPageinfo() schreibt
+    // einen aus Phluser-Token und Salt gebildeten Hash nach #pagedata).
+    // Cachebar hiess deshalb: der erste Aufruf friert die Seite ein, und jeder
+    // weitere Besucher bekam die Bestelldaten des ersten zu sehen - unabhaengig
+    // von seinem eigenen Token. Im FE reproduziert und nach der Umstellung
+    // gegengeprueft.
     [
-        \Pharmaline\Phlorder\Controller\OrderController::class => 'status',
+        \Pharmaline\Phlorder\Controller\OrderController::class => 'list, status',
     ],
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
 );
@@ -36,9 +46,9 @@ defined('TYPO3') or die();
     [
         \Pharmaline\Phlorder\Controller\OrderController::class => 'status, list',
     ],
-    // non-cacheable actions
+    // non-cacheable actions - "list" aus demselben Grund wie beim Plugin "Order".
     [
-        \Pharmaline\Phlorder\Controller\OrderController::class => 'status',
+        \Pharmaline\Phlorder\Controller\OrderController::class => 'status, list',
     ],
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
 );
