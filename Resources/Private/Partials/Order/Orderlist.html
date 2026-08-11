@@ -1,0 +1,61 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<f:comment>
+	Bestellliste des Cockpits. Wird nur mit Inhalt aufgerufen, wenn ein Phluser
+	(Apotheke) angemeldet ist - der Controller fuellt "orders" ausschliesslich
+	dann und ausschliesslich mit den Bestellungen DIESER Apotheke.
+
+	Sortierung und Laenge kommen aus dem FlexForm-Sheet "Liste"
+	(settings.sortField, settings.sortDirection, settings.listLimit).
+
+	Der Link je Zeile haengt "?t=<orderid>" an die aktuelle Seite - genau das
+	liest listAction() aus, um darueber die Einzelansicht in #tellme zu zeigen.
+</f:comment>
+
+<f:if condition="{orders}">
+	<f:then>
+		<h2><f:translate key="list.headline" /></h2>
+		<table class="table table-striped tx-phlorder-list">
+			<thead>
+				<tr>
+					<th><f:translate key="flexform.list.field.timestamp" /></th>
+					<th><f:translate key="flexform.list.field.ordernumber" /></th>
+					<th><f:translate key="list.name" /></th>
+					<th><f:translate key="flexform.list.field.status" /></th>
+				</tr>
+			</thead>
+			<tbody>
+				<f:for each="{orders}" as="listorder">
+					<tr>
+						<td><f:format.date date="{listorder.timestamp}" format="d.m.Y H:i" /></td>
+						<td>
+							<f:link.page additionalParams="{t: listorder.orderid}">{listorder.ordernumber}</f:link.page>
+						</td>
+						<td>{listorder.firstName} {listorder.lastName}</td>
+						<td><f:translate key="order.{listorder.status}" default="{listorder.status}" /></td>
+					</tr>
+				</f:for>
+			</tbody>
+		</table>
+	</f:then>
+	<f:else>
+		<f:comment>
+			Zwei verschiedene Faelle, bewusst unterschieden: nicht angemeldet vs.
+			angemeldet, aber ohne Bestellungen. Der Hinweis auf den Login darf nicht
+			erscheinen, wenn die Apotheke schlicht noch keine Bestellung hat.
+
+			Die Unterscheidung laeuft ueber {data.loggedin} und NICHT ueber {orders}:
+			NULL (kein Login) und ein leeres QueryResult sind fuer Fluid beide falsy,
+			und einen Identitaetsvergleich "===" gibt es in Fluid-Bedingungen nicht -
+			der stand hier zuerst und lieferte immer den falschen Zweig.
+		</f:comment>
+		<p class="tx-phlorder-empty">
+			<f:if condition="{data.loggedin}">
+				<f:then><f:translate key="list.empty" /></f:then>
+				<f:else><f:translate key="list.login" /></f:else>
+			</f:if>
+		</p>
+	</f:else>
+</f:if>
+
+</html>
