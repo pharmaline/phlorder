@@ -1,0 +1,112 @@
+<T3DataStructure>
+	<!--
+		FlexForm des Plugins "Order" (Signatur phlorder_order, Cockpit-/Listenansicht).
+
+		Die gleichnamige Altdatei enthielt ausschliesslich switchableControllerActions
+		und wurde in Phase 6 geloescht (SCA gibt es in v13 nicht mehr, die drei
+		Varianten sind jetzt eigene CTypes). Fachliche Felder standen nie darin - der
+		alte Controller las zwar $this->settings['ff']['sourceDB'], das Feld war in
+		der Datenstruktur aber nie definiert. Die Quelle der Bestellungen kam also
+		immer aus TypoScript (plugin.tx_phlorder_order.persistence.storagePid).
+
+		Feldnamen mit Praefix "settings." sind Absicht: die mergt Extbase nativ nach
+		$this->settings, ein eigener initSettingsWidthFlexform()-Merge entfaellt.
+
+		Bewusst NICHT "persistence.storagePid" als Feldname: den mergt der
+		FrontendConfigurationManager zwar direkt in die Framework-Konfiguration, ein
+		LEERES Feld ueberschreibt dann aber den TypoScript-Wert mit "" - Extbase
+		fragt danach pid=0 ab und die Liste bleibt kommentarlos leer. Ueber
+		settings.sourcePid + den EventListener ApplySourcePidToStoragePid bedeutet
+		"leer" sauber "TypoScript-Default benutzen" (Begruendung dort).
+
+		Sheet "Liste": Sortierung und Laenge der Bestellliste des Cockpits.
+		Ausgewertet in OrderController::listAction() ueber
+		OrderRepository::buildOrderings() / getOrdersByPhluser().
+	-->
+	<sheets>
+		<sSource>
+			<ROOT>
+				<sheetTitle>LLL:EXT:phlorder/Resources/Private/Language/locallang.xlf:flexform.sheet_source</sheetTitle>
+				<type>array</type>
+				<el>
+					<settings.sourcePid>
+						<label>LLL:EXT:phlorder/Resources/Private/Language/locallang.xlf:flexform.source.sourcePid</label>
+						<description>LLL:EXT:phlorder/Resources/Private/Language/locallang.xlf:flexform.source.sourcePid.description</description>
+						<config>
+							<type>group</type>
+							<allowed>pages</allowed>
+							<size>3</size>
+							<minitems>0</minitems>
+							<maxitems>10</maxitems>
+						</config>
+					</settings.sourcePid>
+				</el>
+			</ROOT>
+		</sSource>
+		<sList>
+			<ROOT>
+				<sheetTitle>LLL:EXT:phlorder/Resources/Private/Language/locallang.xlf:flexform.sheet_list</sheetTitle>
+				<type>array</type>
+				<el>
+					<settings.sortField>
+						<label>LLL:EXT:phlorder/Resources/Private/Language/locallang.xlf:flexform.list.sortField</label>
+						<config>
+							<type>select</type>
+							<renderType>selectSingle</renderType>
+							<items>
+								<numIndex index="0">
+									<label>LLL:EXT:phlorder/Resources/Private/Language/locallang.xlf:flexform.list.field.timestamp</label>
+									<value>timestamp</value>
+								</numIndex>
+								<numIndex index="1">
+									<label>LLL:EXT:phlorder/Resources/Private/Language/locallang.xlf:flexform.list.field.ordernumber</label>
+									<value>ordernumber</value>
+								</numIndex>
+								<numIndex index="2">
+									<label>LLL:EXT:phlorder/Resources/Private/Language/locallang.xlf:flexform.list.field.status</label>
+									<value>status</value>
+								</numIndex>
+								<numIndex index="3">
+									<label>LLL:EXT:phlorder/Resources/Private/Language/locallang.xlf:flexform.list.field.lastName</label>
+									<value>lastName</value>
+								</numIndex>
+							</items>
+							<default>timestamp</default>
+						</config>
+					</settings.sortField>
+					<settings.sortDirection>
+						<label>LLL:EXT:phlorder/Resources/Private/Language/locallang.xlf:flexform.list.sortDirection</label>
+						<config>
+							<type>select</type>
+							<renderType>selectSingle</renderType>
+							<items>
+								<numIndex index="0">
+									<label>LLL:EXT:phlorder/Resources/Private/Language/locallang.xlf:flexform.list.sortDirection.desc</label>
+									<value>desc</value>
+								</numIndex>
+								<numIndex index="1">
+									<label>LLL:EXT:phlorder/Resources/Private/Language/locallang.xlf:flexform.list.sortDirection.asc</label>
+									<value>asc</value>
+								</numIndex>
+							</items>
+							<default>desc</default>
+						</config>
+					</settings.sortDirection>
+					<settings.listLimit>
+						<label>LLL:EXT:phlorder/Resources/Private/Language/locallang.xlf:flexform.list.listLimit</label>
+						<description>LLL:EXT:phlorder/Resources/Private/Language/locallang.xlf:flexform.list.listLimit.description</description>
+						<config>
+							<type>number</type>
+							<size>10</size>
+							<range>
+								<lower>0</lower>
+								<upper>1000</upper>
+							</range>
+							<default>50</default>
+						</config>
+					</settings.listLimit>
+				</el>
+			</ROOT>
+		</sList>
+	</sheets>
+</T3DataStructure>
