@@ -50,9 +50,22 @@ class OrderController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
     {
     	$this->init();
 
+    	// Die Bestellliste sieht nur, wer als Apotheke angemeldet ist, und sie zeigt
+    	// ausschliesslich die Bestellungen DIESER Apotheke. Ohne Login bleibt sie leer -
+    	// die Action ist oeffentlich erreichbar.
+    	$orders = null;
+
     	if($this->getPhluserFromFeusers())	//ist ein angemeldeter User in der Phluser
     	{
     		$this->getPageinfo();
+    		$orders = $this->orderRepository->getOrdersByPhluser(
+    			$this->phluser->getUid(),
+    			$this->orderRepository->buildOrderings(
+    				(string)($this->settings['sortField'] ?? ''),
+    				(string)($this->settings['sortDirection'] ?? '')
+    			),
+    			(int)($this->settings['listLimit'] ?? 0)
+    		);
     	}
 
     	// Frueher wurden $order und $data nur INNERHALB des Token-Zweigs gesetzt und
@@ -60,6 +73,11 @@ class OrderController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
     	// sobald kein Token in der URL stand. Jetzt sauber vorbelegt.
     	$order = null;
     	$data = [];
+
+    	// Unterscheidet im Template "nicht angemeldet" von "angemeldet, aber ohne
+    	// Bestellungen" - an {orders} allein ist das nicht zu erkennen: NULL und ein
+    	// leeres QueryResult sind fuer Fluid beide falsy.
+    	$data['loggedin'] = $this->phluser ? 1 : 0;
 
 		$token = $this->getRequestToken();
 		if($token !== ''){	//token given, display order/info
@@ -79,6 +97,7 @@ class OrderController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 		}
 
    		$this->view->assign('order', $order);
+        $this->view->assign('orders', $orders);
         $this->view->assign('data', $data);
         $this->view->assign('settings', $this->settings);
 
@@ -294,14 +313,22 @@ class OrderController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 	}
 
 
-	/** if setCurrentPageAsStoragePid, use current page as storagePid when nothing is set */
+	/** if setCurrentPageAsStoragePid, use current page as storagePid when nothing is set
+	*
+	* Die Quelle der Bestellungen (FlexForm-Feld settings.sourcePid, Sheet "Quelle" des
+	* Cockpit-Plugins) wird NICHT hier gesetzt, sondern im EventListener
+	* ApplySourcePidToStoragePid. Grund: was hier ueber setConfiguration() landet,
+	* ueberschreibt der FrontendConfigurationManager anschliessend wieder mit dem
+	* TypoScript des Plugins - siehe die ausfuehrliche Begruendung im Listener.
+	*
+	* Der frueher hier stehende Zweig auf $this->settings['ff']['sourceDB'] war
+	* wirkungslos: dieses Feld hat die alte FlexForm nie definiert.
+	*/
 	function initStoragePid(){
 		if($this->settings['setCurrentPageAsStoragePid'] ?? false){	//Fallback, wenn nichts gesetzt.
 			// frueher: entfernter Alias Tx_Extbase_Configuration_ConfigurationManagerInterface
 			$configuration = $this->configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
 
-			// Der frueher hier stehende Zweig auf $this->settings['ff']['sourceDB']
-			// ist entfallen: das Feld gibt es in der FlexForm nicht.
 			if (empty($configuration['persistence']['storagePid'])) {
 				$currentPid['persistence']['storagePid'] = $this->getCurrentPageId();
 				$this->configurationManager->setConfiguration(array_merge($configuration, $currentPid));
