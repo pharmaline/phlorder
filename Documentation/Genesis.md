@@ -1380,3 +1380,182 @@ Punkt 4 der Liste unten ist damit erledigt. Unverändert offen: die Secrets
 (Punkt 1), die externen eID-Aufrufer (Punkt 3) und die Bestellnummern-Vergabe
 (Punkt 6). `settings.edit.statusurl` wird weiterhin gesetzt, aber von keinem
 Template gelesen — beim nächsten Aufräumen prüfen.
+
+---
+
+## 2026-08-09 — FlexForm für das Cockpit-Plugin: Quelle der Bestellungen
+
+### Ausgangslage: wo die alten FlexForm-Einstellungen geblieben sind
+
+Es gab in dieser Extension genau **eine** FlexForm,
+`Configuration/FlexForms/flexform_order.xml`, und ihr Inhalt war
+**ausschließlich `switchableControllerActions`** (die drei Varianten `Display`,
+`Status`, `Test`). SCA ist in v13 entfernt; in Phase 6 wurden daraus zwei eigene
+CTypes, womit kein einziges Feld übrig blieb — die Datei wurde gelöscht.
+
+Fachliche Einstellungen sind dabei **nicht** verloren gegangen, es gab schlicht
+keine. Insbesondere gab es **nie** ein Feld für die Quelle der Bestellungen:
+`OrderController::initStoragePid()` las in der Altfassung zwar
+`$this->settings['ff']['sourceDB']`, dieser Key war in der Datenstruktur aber
+nie definiert — ein toter Zweig. Die Storage-Pid kam immer aus dem TypoScript
+(`plugin.tx_phlorder_order.persistence.storagePid`, Konstante `17`).
+
+### Neu
+
+`Configuration/FlexForms/flexform_order.xml` — Sheet `sSource` („Quelle") mit
+einem Feld `settings.sourcePid` (`type=group`, `allowed=pages`, bis zu zehn
+Ordner). Registriert **nur am Cockpit-Plugin** `phlorder_order` über
+`addToAllTCAtypes` + `addPiFlexFormValue('*', …, $signatureOrder)` — bei eigenen
+CTypes (kein `list_type`) ist das der Weg, `subtypes_addlist` greift nicht.
+`phlorder_orderstatus` bekommt die FlexForm bewusst nicht (im FE verifiziert:
+dessen DS-Identifier bleibt `default`).
+
+Labels in `locallang.xlf` / `de.locallang.xlf` (`flexform.sheet_source`,
+`flexform.source.sourcePid[.description]`).
+
+### Zwei Wege, die nicht funktionieren — beide im FE durchgemessen
+
+**1. Das Feld einfach `persistence.storagePid` nennen.**
+Naheliegend, weil `FrontendConfigurationManager::overrideConfigurationFromFlexForm()`
+diesen Namen nativ in die Framework-Konfiguration merged. Aber: ein **leeres**
+Feld überschreibt den TypoScript-Wert mit `''`, `QueryFactory::create()` macht
+daraus über `intExplode` die Pid-Liste `[0]`, und die Bestellliste bleibt
+kommentarlos leer. „Feld nicht ausgefüllt" muss aber „TypoScript-Default
+benutzen" heißen. `ignoreFlexFormSettingsIfEmpty` hilft nicht — das greift
+ausschließlich für `settings.*`.
+
+**2. Den Wert im Controller über `configurationManager->setConfiguration()`
+setzen** (der Weg, den `initStoragePid()` für `setCurrentPageAsStoragePid` geht).
+Erste Fassung dieser Änderung tat genau das — und **der Gegentest im FE fiel
+durch**: mit `sourcePid = 13` wurde die Bestellung von Pid 17 weiterhin
+gefunden. Grund steht in
+`FrontendConfigurationManager::getContextSpecificFrameworkConfiguration()`:
+die per `setConfiguration()` übergebenen Werte werden **vor**
+`overrideConfigurationFromPlugin()` verrechnet, und dieses merged anschließend
+`plugin.tx_phlorder_order.persistence` erneut darüber. Solange im TypoScript
+eine `storagePid` steht (hier: `17`), gewinnt immer das TypoScript. Der alte
+Code fiel nur deshalb nicht auf, weil sein einziger Schreibzugriff in
+`if (empty($configuration['persistence']['storagePid']))` gekapselt ist — also
+genau im Fall, in dem das TypoScript nichts beisteuert.
+
+### Der Weg, der funktioniert
+
+Neuer EventListener
+`Classes/EventListener/ApplySourcePidToStoragePid.php` auf
+`BeforeFlexFormConfigurationOverrideEvent`: er übersetzt
+`settings.sourcePid` in `persistence.storagePid` **innerhalb des FlexForm-Arrays**,
+bevor dieses gemerged wird. Der FlexForm-Merge ist der letzte Schritt von
+`getContextSpecificFrameworkConfiguration()` und schlägt damit das TypoScript.
+Ist das Feld leer, schreibt der Listener nichts — der TypoScript-Default bleibt
+unberührt. Damit ist Problem 1 nicht umschifft, sondern strukturell ausgeschlossen.
+
+Der Listener normalisiert die Liste (`GeneralUtility::trimExplode` + Ziffern pro
+Eintrag, gleiche Absicherung wie in `phlvote`) und greift nur, wenn
+`frameworkConfiguration['extensionName'] === 'Phlorder'` — das Event läuft für
+jedes Extbase-Plugin der Seite.
+
+`OrderController::initStoragePid()` bleibt damit **unverändert** in der Sache;
+ergänzt wurde nur der Kommentar, der auf den Listener verweist.
+
+Unbedenklich für die Phluser-Auflösung: `PhluserRepository::getPhlUserByFID()`
+und `findByUid()` setzen `setRespectStoragePage(false)`, die geänderte Storage-Pid
+trifft sie nicht.
+
+### Gates
+
+- **PHPStan Level 5: 0 Fehler. PHPUnit: 30 Tests, 62 Assertions, grün.**
+  `php-cs-fixer` über die neue Datei (nur über diese — der Bestand ist
+  tab-eingerückt und wird nicht nebenbei umformatiert).
+- **DS-Auflösung** über den echten FormEngine-Weg (`FlexFormTools`): für
+  `CType=phlorder_order` Identifier
+  `{"type":"tca",…,"dataStructureKey":"*,phlorder_order"}`, Sheet `sSource`,
+  Feld `settings.sourcePid`; für `phlorder_orderstatus` `default`.
+- **FE-Test** mit einem temporären Inhaltselement (`phlorder_order` auf Seite 16,
+  nach dem Test gelöscht), Order `f9fd6522-…` / `0031S0604` auf Pid 17,
+  URL `…/presets/phlorder?t=<orderid>`. Ausgewertet wurde gezielt der
+  Cockpit-Block (`<h1>Bestellungen</h1>` bis `id="oresults"`), weil auf derselben
+  Seite ein `phlorder_orderstatus`-Element dieselbe Bestellung rendert:
+  | `settings.sourcePid` | Bestellung im Cockpit-Block | erwartet |
+  |---|---|---|
+  | `17` (richtige Quelle) | ja | ja |
+  | `13` (falsche Quelle) | **nein** | nein |
+  | leer | ja (TypoScript-Default 17) | ja |
+  | `13,17` (Mehrfachauswahl) | ja | ja |
+  Im Fall `13` blieb das Nachbar-Element auf derselben Seite unverändert bei
+  „gefunden" — die Änderung wirkt also genau auf das Element mit der FlexForm
+  und nicht global.
+
+### Was offen bleibt
+
+- `phlorder_orderstatus` hat kein solches Feld. In dieser Instanz unkritisch
+  (beide CTypes lesen von Pid 17), fachlich aber die gleiche Frage.
+- Keine Rekursionstiefe (`persistence.recursive`) — Unterordner der gewählten
+  Seite werden nicht mitgelesen.
+
+---
+
+## 2026-08-09 — Nachtrag: Cockpit war cachebar (Bestelldaten-Leck), und die Bestellliste fehlt
+
+### Gemeldet
+
+„In Bestellungen mit Quelle pid=17 wird nichts angezeigt." Dahinter stecken zwei
+voneinander unabhängige Sachverhalte.
+
+### 1. Das Cockpit-Plugin war cachebar — mit Datenleck
+
+`Order->list` war in `ext_localconf.php` als **cachebare** Action registriert (nur
+`status` stand in der non-cacheable-Liste). Die Action hängt aber an zwei Dingen,
+die **nicht** in den Seiten-Cache-Schlüssel eingehen:
+
+- dem Order-Token `?t=<orderid>` — der steht seit Phase 7 in
+  `FE.cacheHash.excludedParameters` (nötig, damit der `PageArgumentValidator` die
+  eID-Aufrufe nicht als „cachebar mit fehlendem cHash" mit 404 abweist), und
+  ausgeschlossene Parameter sind kein Bestandteil des Cache-Identifiers;
+- dem angemeldeten FE-User — `getPageinfo()` schreibt einen aus Phluser-Token und
+  `ordersalt` gebildeten Hash nach `#pagedata`.
+
+Folge: **der erste Aufruf fror die Seite ein.** Im FE reproduziert (Seite 16,
+Element `phlorder_order`, Quelle 17):
+
+| Reihenfolge nach `cache:flush` | Ergebnis |
+|---|---|
+| 1. Aufruf **mit** Token A | Bestellung A (korrekt) |
+| 2. Aufruf **ohne** Token | Bestellung A — obwohl gar kein Token übergeben wurde |
+| 3. Aufruf mit Token **B** | Bestellung **A** — fremde Bestellung inkl. Name, Abholnummer, Status |
+
+Umgekehrt genauso: wer die Seite zuerst ohne Token aufrief, für den blieb sie
+dauerhaft leer — das ist die gemeldete Beobachtung. Der `csh`-Hash aus
+`#pagedata` wäre auf demselben Weg an fremde Besucher ausgeliefert worden.
+
+**Behoben:** `list` steht jetzt bei **beiden** Plugins in der
+non-cacheable-Liste. Gegengeprüft: Token A → Bestellung A, Token B → Bestellung B,
+ohne Token → keine Bestellung; keine fremden Nummern mehr im Dokument.
+
+Die Statusseite war **nicht** betroffen — `Order->status` stand von Anfang an in
+der non-cacheable-Liste (mit zwei Tokens gegengeprüft). Da die QR-Codes dorthin
+zeigen, war der Kundenpfad also sauber.
+
+### 2. Die Bestellliste des Cockpits existiert nicht
+
+Unabhängig vom Cache zeigt das Cockpit auch im besten Fall **genau eine**
+Bestellung an, nämlich die zum Token `?t=<orderid>`. Eine Liste gibt es im
+migrierten Stand nirgends:
+
+- `OrderRepository` hat genau zwei Methoden — `getOrderByToken()` (eine Bestellung)
+  und `getOrdernumberlatest()` (Zählung für die Nummernvergabe).
+- `List.html` legt ein leeres `<div id="oresults">` an; **kein** Template,
+  **kein** PHP und **kein** JavaScript schreibt jemals hinein.
+- `phlorder.js` enthält nach Phase 8 nur noch das Lade-Overlay, den
+  Gritter-Helfer und das doTimeout-Plugin.
+- Der eID-Worker kennt vier Funktionen (`smtco`/`smocomp`, `smtcu`, `smo`,
+  `gqc`, `lii`) — keine davon liefert eine Bestellliste.
+
+Die Liste wurde also nie migriert (in der Altfassung holte sie sich ein
+inzwischen entferntes JS über die eID). Das ist **kein Nebeneffekt** der
+FlexForm-Änderung: die Quelle greift nachweislich (Messwerte im Eintrag oben),
+es gibt nur nichts, was mehr als eine Bestellung abfragen würde.
+
+Damit hat auch eine **Sortierrichtung** derzeit kein Ziel — ein FlexForm-Feld
+dafür wäre genau die tote Konfiguration, die diese Extension mit
+`settings.ff.sourceDB` schon einmal hatte. Zurückgestellt bis geklärt ist, was
+sortiert werden soll.
